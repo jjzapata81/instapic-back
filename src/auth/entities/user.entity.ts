@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Post } from "src/posts/entities/post.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('users')
 export class User {
@@ -39,6 +40,13 @@ export class User {
         enum:['admin', 'user'],
         default:['user']
     })
-    roles:string[]
+    roles:string[];
+
+    @OneToMany(
+        () => Post,
+        post => post.user,
+        { cascade:true }
+    )
+    posts?: Post[];
 
 }
