@@ -26,7 +26,11 @@ export class UserService {
         ...user
       });
       const { password:_, ...created} = await this.userRepository.save(newUser);
-      return created;
+      return {
+        username:created.username,
+        name:created.name,
+        token:this.getToken({password, ...created})
+      };
     }catch(error){
       console.log(error);
       if(error.code='23505'){

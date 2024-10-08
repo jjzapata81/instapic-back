@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { CreatePostDto } from './dto/create-post.dto';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -18,9 +19,11 @@ export class PostsController {
     return this.postsService.findById(id);
   }
 
+  @UseGuards(AuthGuard)
   @Post()
-  createPost(@Body() request:CreatePostDto){
-    this.postsService.createPost(request);
+  createPost(@Req() req){
+    const request:CreatePostDto = req.body;
+    return this.postsService.createPost(request);
   }
 
   @Put(':id')

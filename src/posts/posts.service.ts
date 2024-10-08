@@ -18,6 +18,7 @@ export class PostsService{
 
     createPost(createPost:CreatePostDto){
       this.posts = [...this.posts, createPost];
+      return this.posts;
     }
   
     updatePost(id:string, updatePost:UpdatePostDto){
