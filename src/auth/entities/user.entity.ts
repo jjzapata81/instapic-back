@@ -1,30 +1,36 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
+@Entity('users')
 export class User {
 
     @PrimaryGeneratedColumn("uuid")
     id:string;
 
     @Column({
-        type:'text',
+        type:'varchar',
         unique:true
     })
     username:string;
 
-    @Column('text')
+    @Column({type:'varchar'})
     email:string;
 
-    @Column('text')
+    @Column({type:'varchar'})
     name:string;
 
-    @Column('text')
+    @Column({type:'varchar'})
     password:string;
 
-    @Column({default:true})
+    @Column({
+        default:true,
+        name:'is_active'
+    })
     isActive:boolean;
 
-    @Column('text', {default:''})
+    @Column({
+        type:'varchar',
+        default:'', 
+        name:'profile_imge'})
     profileImage:string;
 
     @Column({
