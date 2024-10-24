@@ -11,12 +11,9 @@ export class CommentEntity{
     @Column({type:'varchar'})
     comment:string
 
-    @CreateDateColumn()
-    createdAt: Date;
-
     @ManyToOne(
         () => User,
-        user => user.posts
+        user => user.comments
     )
     user: User;
 

@@ -11,9 +11,6 @@ export class Post{
     @Column({type:'varchar'})
     url:string
 
-    @CreateDateColumn()
-    createdAt: Date;
-
     @ManyToOne(
         () => User,
         user => user.posts

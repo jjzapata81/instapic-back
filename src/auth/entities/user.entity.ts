@@ -1,3 +1,4 @@
+import { CommentEntity } from "src/posts/entities/comment.entity";
 import { Post } from "src/posts/entities/post.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -31,7 +32,7 @@ export class User {
     @Column({
         type:'varchar',
         default:'', 
-        name:'profile_imge'})
+        name:'profile_image'})
     profileImage:string;
 
     @Column({
@@ -48,5 +49,11 @@ export class User {
         { cascade:true }
     )
     posts?: Post[];
+
+    @OneToMany(
+        ()=>CommentEntity,
+        comment=>comment.user
+    )
+    comments:CommentEntity[];
 
 }

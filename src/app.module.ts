@@ -16,7 +16,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       password:process.env.APP_DB_PASSWORD,
       autoLoadEntities:true,
       synchronize:true
-
     }),
     PostsModule,
     AuthModule],

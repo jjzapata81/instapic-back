@@ -1,12 +1,13 @@
 import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { LoginUserDto } from './dto/login-user.dto';
 import * as bcryptjs from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class UserService {
@@ -32,7 +33,6 @@ export class UserService {
         token:this.getToken({password, ...created})
       };
     }catch(error){
-      console.log(error);
       if(error.code='23505'){
         throw new BadRequestException(`${createUserDto.username} ya existe!!`)
       }
@@ -53,25 +53,55 @@ export class UserService {
     };
   }
 
-  async findAll() {
-    const users = await this.userRepository.find();
-    return users.map(item=>{
-      const { password, ...user } = item;
-      return user;
+  findAll() {
+    return this.userRepository.find({
+      where:{
+        isActive:true
+      },
+      select:{
+        name:true,
+        email:true,
+        username:true,
+        profileImage:true
+      }
     });
   }
 
-  async findOne(id: string) {
-    const { password, ...user } = await this.userRepository.findOneBy({id});
-    return user;
+  findOne(username: string) {
+    return this.userRepository.findOne({
+      where:{
+        username,
+        isActive:true
+      },
+      relations:{
+        posts:{
+          comments:true
+        }
+      },
+      select:{
+        id:true,
+        username:true,
+        email:true,
+        name:true,
+        profileImage:true,
+        posts:true
+      }
+    });
   }
 
-  update(id: string, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
+  update(updateUserDto: UpdateUserDto) {
+    const { userId, ...user }= updateUserDto;
+    return this.userRepository.update(
+      { id:userId },
+      user
+    );
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} auth`;
+  remove(username: string) {
+    return this.userRepository.update(
+      { username },
+      {isActive:false}
+    );
   }
 
   private isNotValid(password:string, encripted:string){
@@ -82,7 +112,8 @@ export class UserService {
     return this.jwtService.sign({
       id:user.id,
       username:user.username,
-      name:user.name
+      name:user.name,
+      profileImage:user.profileImage
     });
   }
 }
