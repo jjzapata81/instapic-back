@@ -75,7 +75,9 @@ export class UserService {
       },
       relations:{
         posts:{
-          comments:true
+          comments:{
+            user:true
+          }
         }
       },
       select:{
@@ -90,6 +92,7 @@ export class UserService {
   }
 
   update(updateUserDto: UpdateUserDto) {
+    console.log(updateUserDto)
     const { userId, ...user }= updateUserDto;
     return this.userRepository.update(
       { id:userId },

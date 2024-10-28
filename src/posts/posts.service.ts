@@ -15,13 +15,26 @@ export class PostsService {
     private readonly commentRepository: Repository<CommentEntity>
   ) { }
 
-  async findByUserId(id: string) {
-    return await this.postRepository.find({
+  findByUserId(id: string) {
+    return this.postRepository.find({
       where: {
         user: { id }
       },
       relations: {
-        comments:true
+        comments:{
+          user:true
+        }
+      },
+      select:{
+        id:true,
+        url:true,
+        comments:{
+          id:true,
+          comment:true,
+          user: {
+            username:true
+          }
+        }
       }
     });
   }

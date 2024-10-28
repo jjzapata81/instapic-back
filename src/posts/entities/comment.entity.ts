@@ -1,5 +1,5 @@
 import { User } from "src/auth/entities/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Post } from "./post.entity";
 
 @Entity('comments')
@@ -19,7 +19,8 @@ export class CommentEntity{
 
     @ManyToOne(
         () => Post,
-        post => post.comments
+        post => post.comments,
+        {onDelete:'CASCADE'}
     )
     post: Post;
 
